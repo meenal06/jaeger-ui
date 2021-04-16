@@ -1,0 +1,13 @@
+{
+    "integrationFolder": "./cypress/integration",
+    "nodeVersion": "system",
+    "retries": {
+      "runMode": 3,
+      "openMode": 2
+    },
+    "env": {
+      "JAEGER_URL": "http://localhost:3000",
+      "HOTROD_URL": "http://localhost:8080"
+    }
+  }
+  
