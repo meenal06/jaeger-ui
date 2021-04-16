@@ -48,8 +48,12 @@ jobs:
       - name: Navigate to Jaeger-UI
         run: |
           git clone https://github.com/jaegertracing/jaeger.git
-          go run ./jaeger/examples/hotrod/main.go all &
+          cd jaeger
+          go mod tidy
+          cd examples/hotrod
+          go run main.go all &
           wait 15
+          cd ../../..
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
