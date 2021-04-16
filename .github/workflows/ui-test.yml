@@ -1,0 +1,58 @@
+name: "CodeQL"
+
+on: [push, pull_request]
+
+jobs:
+  ui-tests:
+    name: UI Tests
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2.3.4
+
+      - uses: actions/setup-go@v2
+        with:
+          go-version: '^1.14' # The Go version to download (if necessary) and use.
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Setup Yarn
+        run: |
+          npm install -g yarn
+          yarn
+
+      - name: Navigate to Jaeger-UI
+        run: |
+          cd packages/jaeger-ui
+      
+      - name: run all-in-one image
+        run: |
+          docker run -d --name jaeger \
+          -e COLLECTOR_ZIPKIN_HOST_PORT=:9411 \
+          -p 5775:5775/udp \
+          -p 6831:6831/udp \
+          -p 6832:6832/udp \
+          -p 5778:5778 \
+          -p 16686:16686 \
+          -p 14268:14268 \
+          -p 14250:14250 \
+          -p 9411:9411 \
+          jaegertracing/all-in-one:1.22 &
+          sleep 15
+      - name: Navigate to Jaeger-UI
+        run: |
+          git clone https//github.com/jaegertracing/jaeger.git
+          go run ./jaeger/examples/hotrod/main.go all &
+          wait 15
+      - name: Cypress run
+        uses: cypress-io/github-action@v2
+        with:
+          start: yarn start
+          # quote the url to be safe against YML parsing surprises
+          wait-on: 'http://localhost:3000'
