@@ -52,7 +52,7 @@ jobs:
           go mod tidy
           cd examples/hotrod
           go run main.go all &
-          wait 15
+          sleep 15
           cd ../../..
       - name: Cypress run
         uses: cypress-io/github-action@v2
