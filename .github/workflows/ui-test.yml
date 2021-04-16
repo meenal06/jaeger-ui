@@ -47,7 +47,7 @@ jobs:
           sleep 15
       - name: Navigate to Jaeger-UI
         run: |
-          git clone https//github.com/jaegertracing/jaeger.git
+          git clone https://github.com/jaegertracing/jaeger.git
           go run ./jaeger/examples/hotrod/main.go all &
           wait 15
       - name: Cypress run
